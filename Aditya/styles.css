@@ -1,0 +1,104 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 10px;
+}
+
+#hamburger-menu {
+    cursor: pointer;
+}
+
+#website-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#logo {
+    width: 50px;
+    height: 50px;
+    background-color: #ddd;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#dropdown-menu {
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+#dropdown-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#dropdown-menu ul li {
+    padding: 5px 0;
+}
+
+#dropdown-menu ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+nav {
+    background-color: #e0e0e0;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+nav ul li a:hover {
+    color: #666;
+}
+
+main {
+    display: flex;
+    min-height: 400px;
+}
+
+aside {
+    width: 200px;
+    background-color: #f5f5f5;
+    padding: 10px;
+}
+
+#patient-info {
+    flex-grow: 1;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+footer {
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
