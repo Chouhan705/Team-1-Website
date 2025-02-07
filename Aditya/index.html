@@ -9,8 +9,8 @@
 <body>
     <header>
         <div id="hamburger-menu">☰</div>
-        <div id="website-name">My Website</div>
-        <div id="logo">Logo</div>
+        <div img src=\Aditya\banner.jpg id="website-name"></div>
+        <div img src=\Aditya\logo.jpg id="logo">Logo</div>
     </header>
 
     <div id="dropdown-menu" class="hidden">
@@ -28,8 +28,35 @@
     </nav>
 
     <main>
-        <aside id="left-sidebar">Milestone</aside>
-        <section id="patient-info">Patient Info</section>
+        <aside id="left-sidebar">Milestone
+        </aside>
+        <section id="patient-info">Patient Info
+        <form>
+          <p>Select Patients current condition</p>
+          <div>
+            <input type="radio" 
+               id="Dead" 
+               name="conditions" 
+               value="Dead">
+            <label for="Dead">Dead</label>
+          </div>
+          <div>
+            <input type="radio" 
+               id="ICU" 
+               name="conditions" 
+               value="ICU">
+            <label for="ICU">ICU</label>
+          </div>
+          <div>
+            <input type="radio" 
+               id="Accident" 
+               name="conditions" 
+               value="Accident">
+            <label for="Accident">Accident</label>
+          </div>
+          
+        </form>
+        </section>
         <aside id="right-sidebar">Hospital Info</aside>
     </main>
 
