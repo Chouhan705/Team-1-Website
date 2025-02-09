@@ -17,8 +17,8 @@ header {
 }
 
 #website-name {
-    font-size: 24px;
-    font-weight: bold;
+    width: 250px;
+    height: 78px;
 }
 
 #logo {
@@ -103,4 +103,21 @@ footer {
     display: none;
 }
 
-FYAYGFAGDFYAGFJAJFAG
+
+.image-container {
+    display: flex;
+    gap: 10px;
+}
+
+.image-button {
+    width: 100px;
+    height: 100px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.selected {
+    border-color: blue;
+    pointer-events: none; /* Disable clicking the selected one */
+}

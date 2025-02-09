@@ -14,4 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function selectImage(selectedImg) {
+    document.querySelectorAll('.image-button').forEach(img => {
+        img.classList.remove('selected');
+    });
+
+    selectedImg.classList.add('selected');
+}
+
 

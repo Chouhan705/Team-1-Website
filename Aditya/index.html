@@ -9,8 +9,8 @@
 <body>
     <header>
         <div id="hamburger-menu">☰</div>
-        <div img src=\Aditya\banner.jpg id="website-name"></div>
-        <div img src=\Aditya\logo.jpg id="logo">Logo</div>
+        <div> <img src=C:\Users\adity\Documents\GitHub\Team-1-Website\Aditya\banner.jpg id="website-name"></div>
+        <div> <img src=C:\Users\adity\Documents\GitHub\Team-1-Website\Aditya\logo.jpg id="logo"></div>
     </header>
 
     <div id="dropdown-menu" class="hidden">
@@ -33,6 +33,7 @@
         <section id="patient-info">Patient Info
         <form>
           <p>Select Patients current condition</p>
+          <!--
           <div>
             <input type="radio" 
                id="Deceased" 
@@ -45,7 +46,7 @@
                id="ICU" 
                name="conditions" 
                value="ICU">
-            <label for="ICU">ICU</label>
+            <label for="ICU"><img src="C:\Users\adity\Desktop\icu.jpg"></label>
           </div>
           <div>
             <input type="radio" 
@@ -54,7 +55,11 @@
                value="Accident">
             <label for="Accident">Accident</label>
           </div>
-          
+        -->
+          <div>
+            <img src="C:\Users\adity\Desktop\icu.jpg" class="image-button" onclick="selectImage(this)">
+            <img src="C:\Users\adity\Desktop\accident.jpg" class="image-button" onclick="selectImage(this)">
+          </div>
         </form>
         </section>
         <aside id="right-sidebar">Hospital Info</aside>
