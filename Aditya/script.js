@@ -14,12 +14,34 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function selectImage(selectedImg) {
-    document.querySelectorAll('.image-button').forEach(img => {
-        img.classList.remove('selected');
+function selectCondition(card, condition) {
+    // Remove selected class from all cards
+    document.querySelectorAll('.card').forEach(c => {
+        c.classList.remove('selected');
     });
 
-    selectedImg.classList.add('selected');
+    // Add selected class to clicked card
+    card.classList.add('selected');
+
+    // Store the selected condition
+    localStorage.setItem('selectedCondition', condition);
 }
 
+function submitDetails() {
+    const details = document.getElementById('patient-details').value;
+    const selectedCondition = localStorage.getItem('selectedCondition') || 'none';
 
+    // Here you would typically send this data to a server
+    console.log('Patient Condition:', selectedCondition);
+    console.log('Additional Details:', details);
+
+    // Clear the form
+    document.getElementById('patient-details').value = '';
+    document.querySelectorAll('.card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    localStorage.removeItem('selectedCondition');
+
+    // Show confirmation
+    alert('Patient details submitted successfully!');
+}
