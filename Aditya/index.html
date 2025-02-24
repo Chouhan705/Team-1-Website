@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emergency Medical Services</title>
+    <title>Landing Page</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <div id="hamburger-menu">☰</div>
-        <div id="website-name">Chetak</div>
-        <div id="logo">Chetak</div>
+        <div><img src="banner.jpg" id="website-name" alt="Website Banner"></div>
+        <div><img src="logo.jpg" id="logo" alt="Logo"></div>
     </header>
 
     <div id="dropdown-menu" class="hidden">
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="https://www.instagram.com/_.srushti23._/">About</a></li>
+            <li><a href="https://www.instagram.com/harsha_7007/">Contact</a></li>
         </ul>
     </div>
 
@@ -28,36 +28,28 @@
     </nav>
 
     <main>
-        <aside id="left-sidebar">
-            <h3>Milestone</h3>
-            <ul>
-                <li>Patient Admitted</li>
-                <li>Initial Assessment</li>
-                <li>Treatment Started</li>
-            </ul>
-        </aside>
-        
+        <aside id="left-sidebar">Milestone</aside>
         <section id="patient-info">
             <h2>Patient Emergency Condition</h2>
             <div class="emergency-cards">
                 <div class="card" onclick="selectCondition(this, 'cardiac')">
-                    <img src="/placeholder.svg?height=100&width=100" alt="Cardiac Arrest">
+                    <img src="cardiac.jpg" alt="Cardiac Arrest">
                     <p>Cardiac Arrest</p>
                 </div>
                 <div class="card" onclick="selectCondition(this, 'accident')">
-                    <img src="/placeholder.svg?height=100&width=100" alt="Accident">
+                    <img src="accident.jpg" alt="Accident">
                     <p>Accident</p>
                 </div>
                 <div class="card" onclick="selectCondition(this, 'allergy')">
-                    <img src="/placeholder.svg?height=100&width=100" alt="Allergy">
+                    <img src="allergy.jpg" alt="Allergy">
                     <p>Allergy</p>
                 </div>
                 <div class="card" onclick="selectCondition(this, 'labor')">
-                    <img src="/placeholder.svg?height=100&width=100" alt="Labor Condition">
+                    <img src="labor.jpg" alt="Labor Condition">
                     <p>Labor Condition</p>
                 </div>
                 <div class="card" onclick="selectCondition(this, 'stroke')">
-                    <img src="/placeholder.svg?height=100&width=100" alt="Stroke">
+                    <img src="stroke.jpg" alt="Stroke">
                     <p>Stroke</p>
                 </div>
             </div>
@@ -68,19 +60,11 @@
                 <button onclick="submitDetails()">Submit</button>
             </div>
         </section>
-
-        <aside id="right-sidebar">
-            <h3>Hospital Info</h3>
-            <ul>
-                <li>Available Beds: 25</li>
-                <li>ICU Status: Available</li>
-                <li>Emergency Room: Ready</li>
-            </ul>
-        </aside>
+        <aside id="right-sidebar">Hospital Info</aside>
     </main>
 
     <marquee class="helpline">
-        Emergency Helpline Numbers: 911 (Emergency) | 108 (Ambulance) | 1800-123-4567 (Hospital)
+        Helpline No: 8329227255
     </marquee>
 
     <footer>
