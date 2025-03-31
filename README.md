@@ -1,7 +1,5 @@
 # Chetak - Emergency Medical Assistance Navigator 🚑💨
 
-![Chetak Banner](banner.jpg) <!-- Optional: Add your banner image here -->
-
 Chetak is a web application designed to quickly identify the nearest *suitable* hospital based on a patient's emergency condition and current location. In critical moments, finding the right facility fast is crucial, and Chetak aims to streamline this process.
 
 This project was developed as a college assignment, demonstrating core concepts in web development, geolocation, API integration, and conditional logic.
