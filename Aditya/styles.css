@@ -282,3 +282,112 @@ h2, h3 {
     padding-bottom: 8px;
     margin-bottom: 20px;
 }
+/* --- (Keep all existing styles) --- */
+
+/* --- Styles for Sidebar Content --- */
+aside h3 {
+    color: #1a4f93; /* Use a consistent header color */
+    border-bottom: 2px solid #3a7bd5;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+aside ul {
+    list-style: none;
+    padding-left: 5px; /* Adjust as needed */
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+aside ul li {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* --- Styles for Hospital Slideshow --- */
+#hospital-slideshow {
+    position: relative; /* Needed for absolute positioning of buttons */
+    overflow: hidden; /* Hide slides that are not active */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    height: 250px; /* Adjust height as needed */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.hospital-slide {
+    display: none; /* Hide slides by default */
+    padding: 15px;
+    text-align: center;
+    height: 100%;
+    box-sizing: border-box; /* Include padding in height calculation */
+    animation: fadeEffect 1s; /* Add fade effect */
+}
+
+.hospital-slide.active-slide {
+    display: block; /* Show the active slide */
+}
+
+.hospital-slide img {
+    max-width: 80px; /* Adjust size */
+    max-height: 80px;
+    height: auto;
+    border-radius: 50%;
+    border: 2px solid #3a7bd5;
+    margin-bottom: 10px;
+    object-fit: cover; /* Ensure image covers area nicely */
+}
+
+.hospital-slide h4 {
+    margin: 10px 0 5px 0;
+    color: #2c3e50;
+    font-size: 1em;
+}
+
+.hospital-slide p {
+    font-size: 0.85em;
+    color: #555;
+    line-height: 1.4;
+}
+
+/* Slideshow Navigation Buttons */
+.slide-nav {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    padding: 10px 12px; /* Adjust padding */
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.3s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    background-color: rgba(44, 62, 80, 0.7); /* Semi-transparent background */
+    border: none;
+    line-height: 1; /* Ensure button text aligns vertically */
+}
+
+.slide-nav.prev {
+    left: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.slide-nav.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.slide-nav:hover {
+    background-color: rgba(44, 62, 80, 1); /* Darker on hover */
+}
+
+/* Fade Animation */
+@keyframes fadeEffect {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+/* --- (Keep existing responsive styles and other rules) --- */

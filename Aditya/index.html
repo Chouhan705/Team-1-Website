@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>
+    <title>Chetak - Emergency Input</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,55 +16,90 @@
     <div id="dropdown-menu" class="hidden">
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="https://www.instagram.com/_.srushti23._/">About</a></li>
-            <li><a href="https://www.instagram.com/harsha_7007/">Contact</a></li>
+            <li><a href="about.html">About Chetak</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
         </ul>
     </div>
 
-    <nav>
-        <ul>
-            <li><a href="#">Dashboard</a></li>
-        </ul>
-    </nav>
-
     <main>
-        <aside id="left-sidebar">Milestone</aside>
+        <aside id="left-sidebar">
+            <h3>Project Milestones</h3>
+            <ul>
+                <li>✓ Concept Finalized</li>
+                <li>✓ UI Design Phase</li>
+                <li>✓ Core Condition Selection</li>
+                <li>✓ Hospital Data Integration</li>
+                <li>✓ Geolocation & Routing (OSRM)</li>
+                <li>✓ Hospital Matching Algorithm</li>
+                <li>⏳ Real-time Availability (Future)</li>
+                <li>⏳ User Accounts (Future)</li>
+            </ul>
+        </aside>
+
         <section id="patient-info">
-            <h2>Patient Emergency Condition</h2>
+            <h2>Select Patient Emergency Condition</h2>
             <div class="emergency-cards">
-                <div class="card" onclick="selectCondition(this, 'cardiac')">
-                    <img src="cardiac.jpg" alt="Cardiac Arrest">
+                <div class="card" data-condition="cardiac" onclick="selectCondition(this)">
+                    <img src="cardiac-arrest2.jpeg" alt="Cardiac Arrest">
                     <p>Cardiac Arrest</p>
                 </div>
-                <div class="card" onclick="selectCondition(this, 'accident')">
+                <div class="card" data-condition="accident" onclick="selectCondition(this)">
                     <img src="accident.jpg" alt="Accident">
                     <p>Accident</p>
                 </div>
-                <div class="card" onclick="selectCondition(this, 'allergy')">
-                    <img src="allergy.jpg" alt="Allergy">
+                <div class="card" data-condition="allergy" onclick="selectCondition(this)">
+                    <img src="allergy.jpeg" alt="Allergy">
                     <p>Allergy</p>
                 </div>
-                <div class="card" onclick="selectCondition(this, 'labor')">
-                    <img src="labor.jpg" alt="Labor Condition">
+                <div class="card" data-condition="labor" onclick="selectCondition(this)">
+                    <img src="labor.jpeg" alt="Labor Condition">
                     <p>Labor Condition</p>
                 </div>
-                <div class="card" onclick="selectCondition(this, 'stroke')">
-                    <img src="stroke.jpg" alt="Stroke">
+                <div class="card" data-condition="stroke" onclick="selectCondition(this)">
+                    <img src="stroke.jpeg" alt="Stroke">
                     <p>Stroke</p>
                 </div>
-            </div>
+                </div>
 
             <div class="other-condition">
-                <h3>Other Condition</h3>
-                <textarea id="patient-details" placeholder="Enter patient's condition details here..."></textarea>
-                <button onclick="submitDetails()">Submit</button>
+                <h3>Or Describe Other Condition</h3>
+                <textarea id="patient-details" placeholder="If none of the above, describe the patient's condition, symptoms, or injury here..."></textarea>
+                <button id="submit-conditions">Find Nearest Hospital</button>
             </div>
         </section>
-        <aside id="right-sidebar">Hospital Info</aside>
+
+        <aside id="right-sidebar">
+            <h3>Featured Hospitals</h3>
+            <div id="hospital-slideshow">
+                <div class="hospital-slide active-slide">
+                    <img src="hospital_placeholder_1.png" alt="City General Hospital">
+                    <h4>City General Hospital</h4>
+                    <p>Comprehensive care, ICU, multiple specialists.</p>
+                </div>
+                <div class="hospital-slide">
+                    <img src="hospital_placeholder_2.png" alt="Community Medical Center">
+                    <h4>Community Medical Center</h4>
+                    <p>General & Orthopedic care, X-Ray available.</p>
+                </div>
+                 <div class="hospital-slide">
+                    <img src="hospital_placeholder_3.png" alt="St. Mary's Hospital">
+                    <h4>St. Mary's Hospital</h4>
+                    <p>Cardiology, Neurology, ICU facilities.</p>
+                </div>
+                 <div class="hospital-slide">
+                    <img src="hospital_placeholder_4.png" alt="Metro Emergency Care">
+                    <h4>Metro Emergency Care</h4>
+                    <p>Specialized Trauma & Emergency services, ICU.</p>
+                </div>
+                <button class="slide-nav prev" id="prev-slide">❮</button>
+                <button class="slide-nav next" id="next-slide">❯</button>
+            </div>
+             <p style="font-size: 0.8em; text-align: center; margin-top: 15px;">(Sample data shown)</p>
+        </aside>
     </main>
 
     <marquee class="helpline">
-        Helpline No: 8329227255
+        Emergency Helpline No: 8329227255
     </marquee>
 
     <footer>
