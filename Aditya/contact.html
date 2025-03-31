@@ -5,71 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Chetak</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link the main stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* Specific styles for the Contact page content */
-        .content-container {
-            max-width: 750px; /* Adjust width */
-            margin: 30px auto;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-            color: #333;
+        /* Styles remain the same */
+        .content-container { max-width: 750px; margin: 30px auto; padding: 30px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); color: #333; }
+        .content-container h1, .content-container h2 { color: #1a4f93; border-bottom: 2px solid #3a7bd5; padding-bottom: 10px; margin-bottom: 25px; }
+        .content-container h1 { margin-top: 0; text-align: center; border-bottom: none; padding-bottom: 0; }
+        .contact-info { background-color: #f8f9fa; padding: 20px; border-radius: 6px; margin-bottom: 30px; border: 1px solid #e0e0e0; }
+        .contact-info p { margin: 10px 0; line-height: 1.6; display: flex; align-items: center; } /* Use flex for alignment */
+        form label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 0.95em; color: #444; }
+        form input[type="text"], form input[type="email"], form textarea { width: 100%; padding: 12px; margin-bottom: 18px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 0.95em; }
+        form input:focus, form textarea:focus { border-color: #3a7bd5; outline: none; box-shadow: 0 0 5px rgba(58, 123, 213, 0.3); }
+        form button { display: block; width: auto; min-width: 150px; margin: 10px auto 0 auto; }
+
+        /* Style for GitHub Link */
+        .github-link {
+            margin-left: 10px; /* Space between name and icon */
+            color: #333; /* Default icon color */
+            font-size: 1.2em; /* Slightly larger icon */
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: inline-block; /* Needed for transform */
         }
-        .content-container h1,
-        .content-container h2 {
-            color: #1a4f93;
-            border-bottom: 2px solid #3a7bd5;
-            padding-bottom: 10px;
-            margin-bottom: 25px; /* More space after headings */
-        }
-         .content-container h1 {
-             margin-top: 0;
-             text-align: center;
-             border-bottom: none; /* Remove border from main title */
-             padding-bottom: 0;
-         }
-         .contact-info {
-             background-color: #f8f9fa; /* Light background for info section */
-             padding: 20px;
-             border-radius: 6px;
-             margin-bottom: 30px;
-             border: 1px solid #e0e0e0;
-         }
-         .contact-info p {
-             margin: 8px 0;
-             line-height: 1.6;
-         }
-        /* Form specific styles */
-        form label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            font-size: 0.95em;
-            color: #444;
-        }
-        form input[type="text"],
-        form input[type="email"],
-        form textarea {
-            width: 100%; /* Full width within container */
-            padding: 12px;
-            margin-bottom: 18px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box; /* Include padding in width */
-            font-size: 0.95em;
-        }
-         form input:focus, form textarea:focus {
-             border-color: #3a7bd5; /* Highlight focus */
-             outline: none;
-             box-shadow: 0 0 5px rgba(58, 123, 213, 0.3);
-         }
-        form button {
-            display: block; /* Make button block level */
-            width: auto; /* Auto width based on padding */
-            min-width: 150px; /* Minimum width */
-            margin: 10px auto 0 auto; /* Center button */
-            /* Use button styles from styles.css */
+        .github-link:hover {
+            color: #1a4f93; /* Theme color on hover */
+            transform: scale(1.1); /* Slightly enlarge on hover */
         }
     </style>
 </head>
@@ -87,34 +46,44 @@
           </ul>
       </div>
 
-
     <div class="content-container">
         <h1>Contact Us</h1>
 
         <section class="contact-info">
              <h2>Project Team</h2>
              <p>For inquiries about the Chetak project, please reach out to the project leads:</p>
-             <p><strong>Lead Developer 1:</strong> Srushti Bhandare (Replace with actual name/info)</p>
-             <p><strong>Lead Developer 2:</strong> Harshal Chaudhari (Replace with actual name/info)</p>
-             <p><em>(Feel free to add email addresses or profile links if desired)</em></p>
+             <p>
+                 <strong>Lead Developer 1:</strong> Aditya Chouhan
+                 <a href="https://github.com/Chouhan705" target="_blank" rel="noopener noreferrer" class="github-link" title="Aditya's GitHub"> 
+                     <i class="fa-brands fa-github"></i>
+                 </a>
+             </p>
+             <p>
+                 <strong>Lead Developer 2:</strong> Harsha Bhujbal
+                 <a href="https://github.com/harrryyyyyyy" target="_blank" rel="noopener noreferrer" class="github-link" title="Harsha's GitHub"> 
+                     <i class="fa-brands fa-github"></i>
+                 </a>
+             </p>
+             <p>
+                 <strong>Lead Developer 3:</strong> Srushi Gothankar
+                 <a href="https://github.com/Srushti2308" target="_blank" rel="noopener noreferrer" class="github-link" title="Srushi's GitHub"> 
+                     <i class="fa-brands fa-github"></i>
+                 </a>
+            </p>
         </section>
 
         <section>
-             <h2>Send Us a Message (Demo)</h2>
+             <h2>Send Us a Message</h2>
              <p>You can also use the form below to send us your feedback or questions.</p>
-            <form action="#" method="post" onsubmit="alert('Demo form submitted! In a real application, this would send an email or save to a database.'); return false;">
+            <form action="https://formspree.io/f/mnnpbrog" method="POST">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="_replyto" required>
                 <label for="subject">Subject:</label>
                 <input type="text" id="subject" name="subject" required>
-
                 <label for="message">Message:</label>
                 <textarea id="message" name="message" rows="6" required></textarea>
-
                 <button type="submit">Send Message</button>
             </form>
         </section>
@@ -124,13 +93,11 @@
         <div>24/7 Emergency Services Available</div>
     </footer>
 
-      {/* Add script tag if dropdown menu JS is needed */}
       <script>
-         // Minimal JS for dropdown if included on this page
-         document.addEventListener('DOMContentLoaded', function() {
-             const hamburgerMenu = document.getElementById('hamburger-menu');
-             const dropdownMenu = document.getElementById('dropdown-menu');
-
+         // Dropdown JS remains the same
+         document.addEventListener('DOMContentLoaded', function() { /* ... dropdown JS ... */
+            const hamburgerMenu = document.getElementById('hamburger-menu');
+            const dropdownMenu = document.getElementById('dropdown-menu');
              if(hamburgerMenu && dropdownMenu) {
                   hamburgerMenu.addEventListener('click', function(event) {
                       dropdownMenu.classList.toggle('hidden');
@@ -142,7 +109,7 @@
                       }
                   });
              }
-         });
+          });
       </script>
 </body>
 </html>
