@@ -31,8 +31,8 @@
                 <li>✓ Hospital Data Integration</li>
                 <li>✓ Geolocation & Routing (OSRM)</li>
                 <li>✓ Hospital Matching Algorithm</li>
+                <li>✓ Voice Input Integration</li>
                 <li>⏳ Real-time Availability (Future)</li>
-                <li>⏳ User Accounts (Future)</li>
             </ul>
         </aside>
 
@@ -59,13 +59,21 @@
                     <img src="stroke.jpeg" alt="Stroke">
                     <p>Stroke</p>
                 </div>
-                </div>
-
-            <div class="other-condition">
-                <h3>Or Describe Other Condition</h3>
-                <textarea id="patient-details" placeholder="If none of the above, describe the patient's condition, symptoms, or injury here..."></textarea>
-                <button id="submit-conditions">Find Nearest Hospital</button>
             </div>
+            <div class="voice-condition-section">
+                <h3>Or Describe Condition via Voice</h3>
+                <button id="speak-condition-btn" type="button">
+                    🎤 Press and Speak Condition
+                </button>
+                <div id="voice-output" class="voice-output-display">
+                    Recognized text will appear here after speaking...
+                </div>
+                <div id="voice-status" class="voice-status-display">Status: Ready</div>
+            </div>
+            <div class="submit-section">
+                 <button id="submit-conditions">Find Nearest Hospital</button>
+            </div>
+
         </section>
 
         <aside id="right-sidebar">
@@ -94,7 +102,7 @@
                 <button class="slide-nav prev" id="prev-slide">❮</button>
                 <button class="slide-nav next" id="next-slide">❯</button>
             </div>
-             <p style="font-size: 0.8em; text-align: center; margin-top: 15px;">(Sample data shown)</p>
+             <p style="font-size: 0.8em; text-align: center; margin-top: 15px;"></p>
         </aside>
     </main>
 
