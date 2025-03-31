@@ -61,26 +61,6 @@ This project was developed as a college assignment, demonstrating core concepts 
 
 ---
 
-## 📁 Project Structure
-.
-├── index.html # Main landing/input page
-├── map_display.html # Page displaying the map and results
-├── about.html # About the project page
-├── contact.html # Contact form page
-├── styles.css # Main CSS styles for index, about, contact
-├── map_style.css # Specific CSS styles for map_display.html
-├── script.js # JavaScript for index.html (UI, voice, submit)
-├── map_script.js # JavaScript for map_display.html (map, routing, results)
-├── banner.jpg # Header banner image
-├── logo.jpg # Header logo image
-├── cardiac.jpg # Image for cardiac condition card
-├── accident.jpg # Image for accident condition card
-├── allergy.jpg # Image for allergy condition card
-├── labor.jpg # Image for labor condition card
-├── stroke.jpg # Image for stroke condition card
-├── hospital_placeholder_*.png # Placeholder images for slideshow
-└── README.md # This file
-
 ## ⚙️ Setup and Running Locally
 
 1.  **Clone the Repository:**
