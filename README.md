@@ -101,11 +101,11 @@ This project was developed as a college assignment, demonstrating core concepts 
 
 ## 🧑‍💻 Contributors
 
-*   **Aditya Chouhan:** [GitHub Profile URL] <!-- Replace # -->
+*   **Aditya Chouhan:**  <!-- Replace # -->
     <a href="(https://github.com/Chouhan705)" target="_blank"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
-*   **Harsha Bhujbal:** [GitHub Profile URL] <!-- Replace # -->
+*   **Harsha Bhujbal:**  <!-- Replace # -->
     <a href="(https://github.com/harrryyyyyyy)" target="_blank"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
-*   **Srushi Gothankar:** [GitHub Profile URL] <!-- Replace # -->
+*   **Srushi Gothankar:**  <!-- Replace # -->
     <a href="(https://github.com/Srushti2308)" target="_blank"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
 
 ---
