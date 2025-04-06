@@ -1,5 +1,41 @@
 // map_script.js
 
+// --- Hamburger Menu Logic ---
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+
+    // Initialize dropdown state
+    if (dropdownMenu) {
+        dropdownMenu.classList.add('hidden');
+    }
+
+    // Toggle dropdown on hamburger click
+    if (hamburgerMenu && dropdownMenu) {
+        hamburgerMenu.addEventListener('click', function(event) {
+            dropdownMenu.classList.toggle('hidden');
+            event.stopPropagation();
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!dropdownMenu.classList.contains('hidden') && !dropdownMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+
+        dropdownMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                dropdownMenu.classList.add('hidden');
+            });
+        });
+    } else {
+        console.log('Elements not found:', {
+            hamburgerFound: !!hamburgerMenu,
+            dropdownFound: !!dropdownMenu
+        });
+    }
+});
+
 // --- Configuration ---
 // Set this to your backend URL.
 // For local testing (running main.py with uvicorn):

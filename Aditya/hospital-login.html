@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chetak - Hospital Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="hospital-auth.css">
+</head>
+<body>
+    <header>
+        <div id="hamburger-menu">☰</div>
+        <div><img src="banner-removebg-preview.png" id="website-name" alt="Website Banner"></div>
+        <div><img src="logo.jpg" id="logo" alt="Logo"></div>
+    </header>
+
+    <div id="dropdown-menu" class="hidden">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Chetak</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="hospital-login.html">Hospital Login</a></li>
+        </ul>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Hospital Login</h2>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <button type="submit" class="auth-button">Login</button>
+
+                <div class="auth-links">
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                    <a href="hospital-signup.html" class="signup-link">New Hospital? Register here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div>24/7 Emergency Services Available</div>
+        <div>Helpline: 8329227255</div>
+    </footer>
+
+    <script src="hospital-auth.js"></script>
+</body>
+</html> 

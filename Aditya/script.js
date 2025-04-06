@@ -53,8 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
             voiceOutputDiv.textContent = 'Listening...'; // Clear previous text
             recognizedText = ""; // Clear previous result
             console.log('Speech recognition started.');
-             // Deselect any card when starting voice input
-             document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
         };
 
         recognition.onresult = (event) => {

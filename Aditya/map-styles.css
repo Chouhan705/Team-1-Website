@@ -1,8 +1,8 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f4f8; /* Lighter background */
+    background-color: #e8f4f8;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -13,13 +13,11 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to right, #1a4f93, #3a7bd5); /* Chetak blue gradient */
-    padding: 12px 25px;
-    color: white;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-    position: sticky; /* Keep header visible */
-    top: 0;
-    z-index: 1000; /* Ensure header is above map */
+    background: linear-gradient(to right, #15518e, #3498db);
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 9999; /* Ensure header is above other elements */
 }
 
 header h1 {
@@ -29,21 +27,10 @@ header h1 {
 }
 
 #logo {
-    width: 55px; /* Slightly larger logo */
-    height: 55px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     border: 2px solid white;
-    background-color: #fff; /* Placeholder bg */
-    /* Add your actual logo image here using background-image */
-    /* background-image: url('logo.jpg'); */
-    /* background-size: cover; */
-    /* background-position: center; */
-    display: flex; /* Added for placeholder text centering */
-    align-items: center; /* Added for placeholder text centering */
-    justify-content: center; /* Added for placeholder text centering */
-    font-weight: bold; /* Added for placeholder text */
-    color: #1a4f93; /* Added for placeholder text */
-    font-size: 1.1em; /* Added for placeholder text */
 }
 
 #content-wrapper {
@@ -60,6 +47,8 @@ header h1 {
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     border: 1px solid #ccc;
+    position: relative;
+    z-index: 1; /* Ensure map stays below dropdown */
 }
 
 .info-container {
@@ -248,9 +237,104 @@ footer {
     height: 78px;
 }
 
-#logo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid white;
+.header-center {
+    flex: 1;
+    text-align: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#hamburger-menu {
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+#hamburger-menu:hover {
+    transform: scale(1.1);
+}
+
+nav {
+    background: linear-gradient(to right, #34495e, #2c3e50);
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 100%;
+}
+
+nav h1 {
+    color: white;
+    margin: 0;
+    padding: 0;
+    font-size: 1.8em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#dropdown-menu {
+    position: fixed;
+    top: 70px; /* Adjust based on header height */
+    left: 10px;
+    background: white;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 9999;
+}
+
+#dropdown-menu.hidden {
+    display: none;
+}
+
+#dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#dropdown-menu li {
+    padding: 12px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+#dropdown-menu li:last-child {
+    border-bottom: none;
+}
+
+#dropdown-menu a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 500;
+    display: block;
+}
+
+#dropdown-menu a:hover {
+    color: #e74c3c;
+}
+
+.subheader {
+    background: linear-gradient(to right, #3498db, #15518e);
+    padding: 10px 0;
+    text-align: center !important;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-bottom: 1px solid #d1d9e1;
+}
+
+.subheader h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-align: center;
+    width: 100%;
 }

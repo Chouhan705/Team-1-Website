@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chetak - Hospital Route</title>
 
-    <!-- Leaflet CSS (Keep this CDN link here or manage locally) -->
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
           crossorigin=""/>
@@ -22,19 +22,31 @@
     </div>
 
     <header>
-        <h1>Chetak Emergency Route</h1>
+        <div id="hamburger-menu">☰</div>
         <div><img src="banner-removebg-preview.png" id="website-name" alt="Website Banner"></div>
         <div><img src="logo.jpg" id="logo" alt="Logo"></div>
     </header>
+
+    <div id="dropdown-menu" class="hidden">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Chetak</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+    </div>
+
+    <div class="subheader">
+        <h1>Chetak Emergency Route</h1>
+    </div>
 
     <div id="content-wrapper">
         <!-- Map Container -->
         <div id="map"></div>
 
         <!-- Hospital & Patient Info Container -->
-        <div class="info-container" id="info-container" style="display: none;"> <!-- Initially hidden -->
+        <div class="info-container" id="info-container" style="display: none;">
             <h2 id="info-title">Emergency Assessment & Best Hospital</h2>
-            <div id="urgency-display"></div> <!-- Placeholder for urgency indicator -->
+            <div id="urgency-display"></div>
             <div class="info-details" id="info-details">
                 <!-- Details will be populated by JavaScript -->
             </div>
@@ -49,7 +61,7 @@
         <div>Helpline: 8329227255</div>
     </footer>
 
-    <!-- Leaflet JS (Keep this CDN link here or manage locally) -->
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>

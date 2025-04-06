@@ -1,0 +1,193 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px); /* Account for header and footer */
+    padding: 20px;
+    background: linear-gradient(135deg, #e8f4f8 0%, #d4e6f1 100%);
+}
+
+.auth-box {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #d1e8e2;
+}
+
+.signup-box {
+    max-width: 500px;
+}
+
+.auth-box h2 {
+    color: #15518e;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="text"],
+.auth-form input[type="tel"],
+.auth-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.auth-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.auth-form input:focus,
+.auth-form textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-size: 0.9em;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, #15518e, #3498db);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.auth-links {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-links a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.auth-links a:hover {
+    color: #15518e;
+}
+
+.forgot-password {
+    font-size: 0.9em;
+}
+
+.signup-link {
+    font-weight: 500;
+}
+
+/* Error message styling */
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-top: 4px;
+    display: none;
+}
+
+.form-group.error input,
+.form-group.error textarea {
+    border-color: #e74c3c;
+}
+
+.form-group.error .error-message {
+    display: block;
+}
+
+/* Password strength indicator */
+.password-strength {
+    height: 4px;
+    margin-top: 8px;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.strength-weak {
+    background: #e74c3c;
+    width: 33%;
+}
+
+.strength-medium {
+    background: #f39c12;
+    width: 66%;
+}
+
+.strength-strong {
+    background: #27ae60;
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .auth-box {
+        padding: 20px;
+    }
+
+    .auth-form input[type="email"],
+    .auth-form input[type="password"],
+    .auth-form input[type="text"],
+    .auth-form input[type="tel"],
+    .auth-form textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .auth-box h2 {
+        font-size: 1.5em;
+    }
+}
+
+.helper-text {
+    display: block;
+    color: #666;
+    font-size: 0.85em;
+    margin-top: 5px;
+    line-height: 1.4;
+} 
