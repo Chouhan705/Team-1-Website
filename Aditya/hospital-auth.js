@@ -1,49 +1,30 @@
+// Form validation and submission handling
 document.addEventListener('DOMContentLoaded', function() {
-    // Hamburger menu logic
-    const hamburgerMenu = document.getElementById('hamburger-menu');
-    const dropdownMenu = document.getElementById('dropdown-menu');
-
-    if(hamburgerMenu && dropdownMenu){
-        hamburgerMenu.addEventListener('click', function(event) {
-            dropdownMenu.classList.toggle('hidden');
-            event.stopPropagation();
-        });
-
-        document.addEventListener('click', function(event) {
-            if (!dropdownMenu.classList.contains('hidden') && !dropdownMenu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
-                dropdownMenu.classList.add('hidden');
-            }
-        });
-
-        dropdownMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                dropdownMenu.classList.add('hidden');
-            });
-        });
-    }
-
     // Login form handling
-    const loginForm = document.getElementById('loginForm');
+    const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
 
     // Signup form handling
-    const signupForm = document.getElementById('signupForm');
+    const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', handleSignup);
         
-        // Password strength checker
+        // Password strength indicator
         const passwordInput = document.getElementById('password');
         if (passwordInput) {
-            passwordInput.addEventListener('input', checkPasswordStrength);
+            passwordInput.addEventListener('input', function() {
+                const strength = checkPasswordStrength(this.value);
+                updatePasswordStrengthIndicator(strength);
+            });
         }
 
-        // Password confirmation checker
+        // Password confirmation check
         const confirmPasswordInput = document.getElementById('confirmPassword');
         if (confirmPasswordInput) {
-            confirmPasswordInput.addEventListener('input', () => {
-                validatePasswordMatch(passwordInput.value, confirmPasswordInput.value);
+            confirmPasswordInput.addEventListener('input', function() {
+                checkPasswordMatch();
             });
         }
     }
@@ -51,133 +32,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function handleLogin(e) {
     e.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const remember = document.getElementById('remember').checked;
-
-    if (!validateEmail(email)) {
-        showError('email', 'Please enter a valid email address');
-        return;
-    }
-
-    if (!validatePassword(password)) {
-        showError('password', 'Password must be at least 6 characters long');
-        return;
-    }
+    const formData = new FormData(e.target);
+    const data = {
+        email: formData.get('email'),
+        password: formData.get('password')
+    };
 
     try {
-        const response = await fetch('YOUR_BACKEND_URL/api/hospital/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                password,
-                remember
-            })
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Login failed');
-        }
-
-        const data = await response.json();
-        
-        if (data.token) {
-            localStorage.setItem('hospitalToken', data.token);
-            window.location.href = 'hospital-dashboard.html';
-        }
+        // TODO: Implement actual login API call
+        console.log('Login attempt:', data);
+        // For now, just redirect to dashboard
+        window.location.href = 'hospital-dashboard.html';
     } catch (error) {
-        showError('email', error.message || 'Login failed. Please try again.');
+        showError('Login failed. Please check your credentials.');
     }
 }
 
 async function handleSignup(e) {
     e.preventDefault();
-
-    const hospitalName = document.getElementById('hospitalName').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
-    const address = document.getElementById('address').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const licenseNumber = document.getElementById('licenseNumber').value;
-    const terms = document.getElementById('terms').checked;
-
-    // Validation
-    if (!hospitalName.trim()) {
-        showError('hospitalName', 'Hospital name is required');
-        return;
-    }
-
-    if (!validateEmail(email)) {
-        showError('email', 'Please enter a valid email address');
-        return;
-    }
-
-    if (!validatePhone(phone)) {
-        showError('phone', 'Please enter a valid 10-digit phone number');
-        return;
-    }
-
-    if (!address.trim()) {
-        showError('address', 'Address is required');
-        return;
-    }
-
-    if (!validatePassword(password)) {
-        showError('password', 'Password must be at least 6 characters long');
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        showError('confirmPassword', 'Passwords do not match');
-        return;
-    }
-
+    const formData = new FormData(e.target);
+    
+    // Validate license number format
+    const licenseNumber = formData.get('licenseNumber');
     if (!validateLicenseNumber(licenseNumber)) {
-        showError('licenseNumber', 'Please enter a valid license number. Format examples: MH/12345/2023, CEA-MH-12345, or NABH-H-12345');
+        showError('Invalid license number format. Please use one of the following formats:\n' +
+                 'State format: XX/12345/YYYY (e.g., MH/12345/2023)\n' +
+                 'CEA format: CEA-XX-12345 (e.g., CEA-MH-12345)\n' +
+                 'NABH format: NABH-H-12345');
         return;
     }
 
-    if (!terms) {
-        showError('terms', 'You must agree to the Terms and Conditions');
-        return;
-    }
+    const data = {
+        hospitalName: formData.get('hospitalName'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        address: formData.get('address'),
+        password: formData.get('password'),
+        licenseNumber: licenseNumber
+    };
 
     try {
-        const response = await fetch('YOUR_BACKEND_URL/api/hospital/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                hospitalName,
-                email,
-                phone,
-                address,
-                password,
-                licenseNumber
-            })
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Registration failed');
-        }
-
-        const data = await response.json();
-        
-        if (data.success) {
-            // Show success message and redirect to login
-            alert('Registration successful! Please login to continue.');
-            window.location.href = 'hospital-login.html';
-        }
+        // TODO: Implement actual signup API call
+        console.log('Signup attempt:', data);
+        // For now, just redirect to dashboard
+        window.location.href = 'hospital-dashboard.html';
     } catch (error) {
-        showError('email', error.message || 'Registration failed. Please try again.');
+        showError('Signup failed. Please try again.');
     }
 }
 
@@ -203,57 +103,59 @@ function validatePasswordMatch(password, confirmPassword) {
     return true;
 }
 
-function checkPasswordStrength(e) {
-    const password = e.target.value;
-    const formGroup = e.target.closest('.form-group');
-    
-    // Remove old strength indicator if it exists
-    const oldIndicator = formGroup.querySelector('.password-strength');
-    if (oldIndicator) {
-        oldIndicator.remove();
-    }
-
-    // Create new strength indicator
-    const strengthIndicator = document.createElement('div');
-    strengthIndicator.className = 'password-strength';
-
-    // Check password strength
+function checkPasswordStrength(password) {
     let strength = 0;
+    
     if (password.length >= 8) strength++;
-    if (password.match(/[A-Z]/)) strength++;
-    if (password.match(/[0-9]/)) strength++;
-    if (password.match(/[^A-Za-z0-9]/)) strength++;
-
-    // Add appropriate class based on strength
-    if (strength <= 2) {
-        strengthIndicator.classList.add('strength-weak');
-    } else if (strength === 3) {
-        strengthIndicator.classList.add('strength-medium');
-    } else {
-        strengthIndicator.classList.add('strength-strong');
-    }
-
-    formGroup.appendChild(strengthIndicator);
+    if (password.match(/[a-z]+/)) strength++;
+    if (password.match(/[A-Z]+/)) strength++;
+    if (password.match(/[0-9]+/)) strength++;
+    if (password.match(/[^a-zA-Z0-9]+/)) strength++;
+    
+    return strength;
 }
 
-function showError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    const formGroup = field.closest('.form-group');
-    
-    formGroup.classList.add('error');
-    
-    let errorDiv = formGroup.querySelector('.error-message');
-    if (!errorDiv) {
-        errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        formGroup.appendChild(errorDiv);
+function updatePasswordStrengthIndicator(strength) {
+    const indicator = document.getElementById('password-strength');
+    if (!indicator) return;
+
+    indicator.className = 'password-strength';
+    if (strength <= 2) {
+        indicator.classList.add('weak');
+        indicator.textContent = 'Weak';
+    } else if (strength <= 4) {
+        indicator.classList.add('medium');
+        indicator.textContent = 'Medium';
+    } else {
+        indicator.classList.add('strong');
+        indicator.textContent = 'Strong';
     }
+}
+
+function checkPasswordMatch() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const errorElement = document.getElementById('confirm-password-error');
+
+    if (password !== confirmPassword) {
+        errorElement.textContent = 'Passwords do not match';
+        errorElement.style.display = 'block';
+    } else {
+        errorElement.style.display = 'none';
+    }
+}
+
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
     errorDiv.textContent = message;
     
+    const container = document.querySelector('.auth-container');
+    container.insertBefore(errorDiv, container.firstChild);
+    
     setTimeout(() => {
-        formGroup.classList.remove('error');
         errorDiv.remove();
-    }, 3000);
+    }, 5000);
 }
 
 // Clear error when user starts typing
@@ -269,15 +171,12 @@ document.querySelectorAll('.auth-form input, .auth-form textarea').forEach(input
 });
 
 function validateLicenseNumber(license) {
-    // Common formats for Indian hospital licenses:
-    // 1. State Medical Council format: XX/12345/YYYY (state code/number/year)
-    // 2. Clinical Establishments format: CEA-XX-12345
-    // 3. NABH format: NABH-H-XXXXX
-    const formats = [
-        /^[A-Z]{2}\/\d{5}\/\d{4}$/, // State format: MH/12345/2023
-        /^CEA-[A-Z]{2}-\d{5}$/, // CEA format: CEA-MH-12345
-        /^NABH-H-\d{5}$/ // NABH format: NABH-H-12345
-    ];
+    // State format: XX/12345/YYYY
+    const stateFormat = /^[A-Z]{2}\/\d{5}\/\d{4}$/;
+    // CEA format: CEA-XX-12345
+    const ceaFormat = /^CEA-[A-Z]{2}-\d{5}$/;
+    // NABH format: NABH-H-12345
+    const nabhFormat = /^NABH-H-\d{5}$/;
 
-    return formats.some(format => format.test(license));
+    return stateFormat.test(license) || ceaFormat.test(license) || nabhFormat.test(license);
 } 
