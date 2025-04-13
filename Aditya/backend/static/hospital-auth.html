@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Authentication - Chetak</title>
+    <link rel="stylesheet" href="/static/css/hospital-auth.css">
+</head>
+<body>
+    <header>
+        <div id="hamburger-menu">☰</div>
+        <div><img src="/static/images/banner-removebg-preview.png" id="website-name" alt="Website Banner"></div>
+        <div><img src="/static/images/logo.jpg" id="logo" alt="Logo"></div>
+    </header>
+
+    <div id="dropdown-menu" class="hidden">
+        <ul>
+            <li><a href="/static/index.html">Home</a></li>
+            <li><a href="/static/about.html">About Chetak</a></li>
+            <li><a href="/static/contact.html">Contact Us</a></li>
+            <li><a href="/static/hospital-auth.html">Hospital Login/Register</a></li>
+        </ul>
+    </div>
+
+    <div class="auth-container">
+        
+        <!-- Login Section -->
+        <div id="login-section">
+            <form id="login-form" class="auth-form">
+                <h2>Hospital Login</h2>
+                <p class="auth-subtitle">Access your hospital dashboard</p>
+                
+                <div id="login-error-message" class="error-message" style="display: none;"></div>
+
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <div class="form-options">
+                    <label><input type="checkbox" name="remember"> Remember me</label>
+                    <a href="#" class="forgot-password">Forgot password?</a> 
+                </div>
+                <button type="submit">Login</button>
+                <p class="toggle-auth">
+                    Need an account? <a href="#" id="show-signup">Sign up</a>
+                </p>
+            </form>
+        </div>
+
+        <!-- Signup Section (Initially Hidden) -->
+        <div id="signup-section" style="display: none;">
+             <form id="signup-form" class="auth-form">
+                <h2>Hospital Registration</h2>
+                <p class="auth-subtitle">Create your hospital account</p>
+
+                <div id="signup-error-message" class="error-message" style="display: none;"></div>
+
+                <div class="form-group">
+                    <label for="hospitalName">Hospital Name</label>
+                    <input type="text" id="hospitalName" name="hospitalName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                 <div class="form-group">
+                    <label for="address">Full Address</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="licenseNumber">Hospital License Number</label>
+                    <input type="text" id="licenseNumber" name="licenseNumber" placeholder="e.g., MH/12345/2023" required>
+                     <small class="helper-text">Formats: XX/12345/YYYY, CEA-XX-12345, NABH-H-12345</small>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                    <div id="password-strength" class="password-strength"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <div id="confirm-password-error" class="error-text"></div>
+                </div>
+                <div class="form-group terms">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to the <a href="#">terms and conditions</a></label>
+                </div>
+                <button type="submit">Register</button>
+                 <p class="toggle-auth">
+                    Already have an account? <a href="#" id="show-login">Log in</a>
+                </p>
+            </form>
+        </div>
+
+    </div>
+    <script src="/static/js/hospital-auth.js"></script>
+</body>
+</html> 

@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chetak - Emergency Input</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
     <header>
         <div id="hamburger-menu">☰</div>
-        <div><img src="banner-removebg-preview.png" id="website-name" alt="Website Banner"></div>
-        <div><img src="logo.jpg" id="logo" alt="Logo"></div>
+        <div><img src="/static/images/banner-removebg-preview.png" id="website-name" alt="Website Banner"></div>
+        <div><img src="/static/images/logo.jpg" id="logo" alt="Logo"></div>
     </header>
 
     <div id="dropdown-menu" class="hidden">
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About Chetak</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="/static/index.html">Home</a></li>
+            <li><a href="/static/about.html">About Chetak</a></li>
+            <li><a href="/static/contact.html">Contact Us</a></li>
+            <li><a href="/static/hospital-auth.html">Hospital Login/Register</a></li>
         </ul>
     </div>
 
@@ -40,23 +41,23 @@
             <h2>Select Patient Emergency Condition</h2>
             <div class="emergency-cards">
                 <div class="card" data-condition="cardiac" onclick="selectCondition(this)">
-                    <img src="cardiac-arrest2.jpeg" alt="Cardiac Arrest">
+                    <img src="/static/images/cardiac-arrest2.jpeg" alt="Cardiac Arrest">
                     <p>Cardiac Arrest</p>
                 </div>
                 <div class="card" data-condition="accident" onclick="selectCondition(this)">
-                    <img src="accident.jpg" alt="Accident">
+                    <img src="/static/images/accident.jpg" alt="Accident">
                     <p>Accident</p>
                 </div>
                 <div class="card" data-condition="allergy" onclick="selectCondition(this)">
-                    <img src="allergy.jpeg" alt="Allergy">
+                    <img src="/static/images/allergy.jpeg" alt="Allergy">
                     <p>Allergy</p>
                 </div>
                 <div class="card" data-condition="labor" onclick="selectCondition(this)">
-                    <img src="labor.jpeg" alt="Labor Condition">
+                    <img src="/static/images/labor.jpeg" alt="Labor Condition">
                     <p>Labor Condition</p>
                 </div>
                 <div class="card" data-condition="stroke" onclick="selectCondition(this)">
-                    <img src="stroke.jpeg" alt="Stroke">
+                    <img src="/static/images/stroke.jpeg" alt="Stroke">
                     <p>Stroke</p>
                 </div>
             </div>
@@ -71,38 +72,34 @@
                 <div id="voice-status" class="voice-status-display">Status: Ready</div>
             </div>
             <div class="submit-section">
-                 <button id="submit-conditions">Find Nearest Hospital</button>
+                <button id="submit-conditions">Find Nearest Hospital</button>
             </div>
-
         </section>
 
         <aside id="right-sidebar">
             <h3>Featured Hospitals</h3>
             <div id="hospital-slideshow">
                 <div class="hospital-slide active-slide">
-                    <img src="hospital_placeholder_1.jpeg" alt="City General Hospital">
+                    <img src="/static/images/hospital_placeholder_1.jpeg" alt="City General Hospital">
                     <h4>City General Hospital</h4>
                     <p>Comprehensive care, ICU, multiple specialists.</p>
                 </div>
                 <div class="hospital-slide">
-                    <img src="hospital_placeholder_2.jpeg" alt="Community Medical Center">
+                    <img src="/static/images/hospital_placeholder_2.jpeg" alt="Community Medical Center">
                     <h4>Community Medical Center</h4>
                     <p>General & Orthopedic care, X-Ray available.</p>
                 </div>
-                 <div class="hospital-slide">
-                    <img src="hospital_placeholder_3.jpeg" alt="St. Mary's Hospital">
+                <div class="hospital-slide">
+                    <img src="/static/images/hospital_placeholder_3.jpeg" alt="St. Mary's Hospital">
                     <h4>St. Mary's Hospital</h4>
                     <p>Cardiology, Neurology, ICU facilities.</p>
                 </div>
-                 <div class="hospital-slide">
-                    <img src="hospital_placeholder_4.jpeg" alt="Metro Emergency Care">
+                <div class="hospital-slide">
+                    <img src="/static/images/hospital_placeholder_4.jpeg" alt="Metro Emergency Care">
                     <h4>Metro Emergency Care</h4>
-                    <p>Specialized Trauma & Emergency services, ICU.</p>
+                    <p>24/7 Emergency, Trauma Center.</p>
                 </div>
-                <button class="slide-nav prev" id="prev-slide">❮</button>
-                <button class="slide-nav next" id="next-slide">❯</button>
             </div>
-             <p style="font-size: 0.8em; text-align: center; margin-top: 15px;"></p>
         </aside>
     </main>
 
@@ -114,6 +111,6 @@
         <div>24/7 Emergency Services Available</div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="/static/js/script.js"></script>
 </body>
 </html>

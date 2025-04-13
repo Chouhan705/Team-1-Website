@@ -2,7 +2,7 @@
 
 import os
 import logging
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient, GEOSPHERE
 from pymongo.errors import ConnectionFailure, OperationFailure
@@ -10,9 +10,20 @@ from dotenv import load_dotenv
 from pydantic import BaseModel, Field, field_validator
 # Correct Pydantic V2 imports needed for schema customization
 from pydantic_core import core_schema
+from functools import wraps
 #--------------------------------------------------------
 from typing import List, Optional, Dict, Any, Literal # Import Literal
 from bson import ObjectId # To handle MongoDB ObjectId
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from datetime import datetime, timedelta, timezone
+from pydantic import EmailStr
+from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import uvicorn
+import bcrypt
 
 # --- Basic Logging Setup ---
 # Configure logging format and level
@@ -25,22 +36,32 @@ logger = logging.getLogger(__name__)
 
 # --- Configuration ---
 load_dotenv() # Load environment variables from .env file
-MONGO_URI = os.getenv("MONGO_URI")
-DB_NAME = os.getenv("DB_NAME", "chetakDB") # Default database name if not in .env
-COLLECTION_NAME = "hospitals"
+MONGO_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")  # Default to local if not set
+DB_NAME = os.getenv("DB_NAME", "chetak")  # Default to lowercase, configurable
+COLLECTION_NAME = os.getenv("COLLECTION_NAME", "hospitals")
+JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key")  # Change this in production
+PORT = int(os.getenv("PORT", 8000))
 
-# --- Pre-startup Checks ---
+# --- NEW: Security Configuration ---
+SECRET_KEY = os.getenv("JWT_SECRET") # Load from .env
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 # Token validity period
+
 if not MONGO_URI:
     logger.critical("FATAL ERROR: MONGO_URI environment variable not found. Set it in your .env file.")
     exit("MONGO_URI not set.")
 
+if not SECRET_KEY:
+    logger.critical("FATAL ERROR: JWT_SECRET environment variable not found. Set it in your .env file.")
+    exit("JWT_SECRET not set.")
+
 # --- FastAPI App Initialization ---
 app = FastAPI(
-    title="Chetak API",
-    description="API for finding suitable hospitals based on location and needs.",
+    title="Hospital Management System",
+    description="API for managing hospital data and emergency services",
     version="1.0.0",
-    docs_url="/docs", # Standard docs URL
-    redoc_url="/redoc" # Alternative docs URL
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
 )
 
 # --- CORS Middleware Configuration ---
@@ -62,9 +83,15 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,      # Origins allowed to make requests
     allow_credentials=True,   # Allow cookies if needed in future
-    allow_methods=["GET"],      # Only allow GET method for this simple API
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],      # Allow all necessary methods
     allow_headers=["*"],        # Allow all standard headers
 )
+
+# --- Static Files and Templates Configuration ---
+# Mount the static files directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
+# Initialize Jinja2 templates
+templates = Jinja2Templates(directory="templates")
 
 # --- Database Connection Management ---
 client: Optional[MongoClient] = None
@@ -77,8 +104,11 @@ async def startup_db_client():
     global client, db, hospitals_collection
     try:
         logger.info(f"Attempting to connect to MongoDB Atlas...")
-        client = MongoClient(MONGO_URI,
-                             serverSelectionTimeoutMS=5000) # Add timeout
+        client = MongoClient(
+            MONGO_URI,
+            serverSelectionTimeoutMS=5000,
+            connectTimeoutMS=5000
+        )
         # Ping the server to verify connection before proceeding
         client.admin.command('ping')
         logger.info("MongoDB connection successful (ping successful).")
@@ -111,7 +141,6 @@ async def shutdown_db_client():
     if client:
         client.close()
         logger.info("MongoDB connection closed.")
-
 
 # --- Pydantic Models (Data Validation & Serialization) ---
 
@@ -216,13 +245,119 @@ class HospitalResponse(BaseModel):
          }
     }
 
+# --- NEW: Authentication Models ---
+class TokenData(BaseModel):
+    email: Optional[str] = None
+
+class HospitalUserBase(BaseModel):
+    hospitalName: str = Field(...)
+    email: EmailStr = Field(...)
+    phone: str = Field(...) # Add more specific validation later if needed
+    address: str = Field(...)
+    licenseNumber: str = Field(...)
+
+class HospitalUserCreate(HospitalUserBase):
+    password: str = Field(..., min_length=8)
+
+class HospitalUserInDBBase(HospitalUserBase):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    hashed_password: str = Field(...)
+    is_active: bool = Field(default=True)
+    registration_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    model_config = {
+        "arbitrary_types_allowed": True,
+        "json_encoders": {ObjectId: str},
+        "populate_by_name": True,
+    }
+
+# Model for returning user data (excluding password)
+class HospitalUserPublic(HospitalUserBase):
+     id: str = Field(..., alias="_id") # Return ID as string
+     is_active: bool
+     registration_date: datetime
+
+     model_config = {
+         "populate_by_name": True,
+         "json_encoders": {ObjectId: str}
+     }
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+# --- NEW: Security Utility Functions ---
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verifies a plain password against a hashed password."""
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password: str) -> str:
+    """Hashes a plain password."""
+    return pwd_context.hash(password)
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    """Creates a JWT access token."""
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        # Default expiration time
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/hospital/token") # Login endpoint URL
+
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> HospitalUserInDBBase:
+    """Dependency to get the current authenticated user from a token."""
+    logger.info("Validating JWT token...")
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            logger.warning("Token validation failed: No email in payload")
+            raise credentials_exception
+        logger.info(f"Token validated for email: {email}")
+        token_data = TokenData(email=email)
+    except JWTError as e:
+        logger.warning(f"Token validation failed: {str(e)}")
+        raise credentials_exception
+    
+    if hospitals_collection is None:
+        logger.error("Database connection not available during token validation")
+        raise HTTPException(status_code=503, detail="Database service unavailable.")
+         
+    logger.info(f"Fetching hospital data for email: {email}")
+    user = hospitals_collection.find_one({"email": token_data.email})
+    if user is None:
+        logger.warning(f"Token validation failed: Hospital not found for email {email}")
+        raise credentials_exception
+        
+    logger.info("Converting hospital data to model...")
+    user_model = HospitalUserInDBBase(**user)
+    return user_model
+
+async def get_current_active_user(current_user: HospitalUserInDBBase = Depends(get_current_user)) -> HospitalUserInDBBase:
+    """Dependency to get the current *active* user."""
+    # Example: Add check for active status if needed
+    # if not current_user.is_active:
+    #     raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
 
 # --- API Endpoints ---
 
 @app.get("/", tags=["Root"])
 async def read_root():
-    """Provides a simple welcome message to verify the API is running."""
-    return {"message": "Welcome to the Chetak API! Visit /docs for API documentation."}
+    """Redirects to the main frontend page."""
+    return RedirectResponse(url="/static/index.html")
 
 @app.get("/api/find-suitable",
          response_model=List[HospitalResponse], # Specify the expected response structure
@@ -327,11 +462,230 @@ async def find_suitable_hospitals(
         logger.error(f"An unexpected error occurred during hospital search: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="An internal server error occurred while searching for hospitals.")
 
+@app.post("/api/hospital/register", response_model=HospitalUserPublic, tags=["Authentication"])
+async def register_hospital(hospital: HospitalUserCreate):
+    """Register a new hospital."""
+    logger.info("="*50)
+    logger.info("STARTING HOSPITAL REGISTRATION PROCESS")
+    logger.info(f"Received registration request for hospital: {hospital.hospitalName}")
+    logger.info(f"Email: {hospital.email}")
+    logger.info(f"License Number: {hospital.licenseNumber}")
+    
+    if hospitals_collection is None:
+        logger.error("❌ Database connection not available during registration")
+        raise HTTPException(status_code=503, detail="Database service unavailable")
+
+    # Check if email already exists
+    logger.info("Checking for existing email...")
+    existing_hospital = hospitals_collection.find_one({"email": hospital.email})
+    if existing_hospital:
+        logger.warning(f"❌ Registration failed: Email {hospital.email} already registered")
+        raise HTTPException(status_code=400, detail="Email already registered")
+    logger.info("✅ Email check passed - no existing email found")
+    
+    # Check if license number already exists
+    logger.info("Checking for existing license number...")
+    existing_license = hospitals_collection.find_one({"licenseNumber": hospital.licenseNumber})
+    if existing_license:
+        logger.warning(f"❌ Registration failed: License number {hospital.licenseNumber} already registered")
+        raise HTTPException(status_code=400, detail="License number already registered")
+    logger.info("✅ License number check passed - no existing license found")
+
+    logger.info("Creating new hospital document...")
+    # Create hospital document
+    hospital_dict = hospital.model_dump(exclude={"password"})
+    logger.info("✅ Successfully created hospital dictionary")
+    
+    # Hash the password
+    logger.info("Hashing password...")
+    hashed_password = get_password_hash(hospital.password)
+    logger.info("✅ Password hashed successfully")
+
+    # Prepare the complete document
+    hospital_dict.update({
+        "hashed_password": hashed_password,
+        "is_active": True,
+        "registration_date": datetime.now(timezone.utc),
+        "location": {
+            "type": "Point",
+            "coordinates": [0, 0]  # Default coordinates, to be updated later
+        },
+        "hasICU": False,  # Default values
+        "specialists": [],
+        "equipment": []
+    })
+    logger.info("✅ Document prepared with all required fields")
+
+    try:
+        logger.info("Attempting to insert hospital into database...")
+        result = hospitals_collection.insert_one(hospital_dict)
+        logger.info(f"✅ Successfully inserted hospital with ID: {result.inserted_id}")
+        
+        # Fetch the inserted document to verify
+        inserted_hospital = hospitals_collection.find_one({"_id": result.inserted_id})
+        if inserted_hospital:
+            logger.info("✅ Successfully verified hospital in database")
+            logger.info("="*50)
+            return HospitalUserPublic(**inserted_hospital)
+        else:
+            logger.error("❌ Failed to verify hospital in database after insertion")
+            raise HTTPException(status_code=500, detail="Error verifying hospital registration")
+    except Exception as e:
+        logger.error(f"❌ Error registering hospital: {str(e)}", exc_info=True)
+        logger.error("Registration failed with error details:", exc_info=True)
+        logger.info("="*50)
+        raise HTTPException(status_code=500, detail="Error registering hospital")
+
+@app.post("/api/hospital/token", response_model=Token, tags=["Authentication"])
+async def login_hospital(form_data: OAuth2PasswordRequestForm = Depends()):
+    """Login endpoint for hospitals to get JWT token."""
+    logger.info(f"Login attempt for email: {form_data.username}")
+    
+    if hospitals_collection is None:
+        logger.error("Database connection not available during login")
+        raise HTTPException(status_code=503, detail="Database service unavailable")
+
+    hospital = hospitals_collection.find_one({"email": form_data.username})
+    if not hospital:
+        logger.warning(f"Login failed: Email {form_data.username} not found")
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
+
+    logger.info("Verifying password...")
+    if not verify_password(form_data.password, hospital["hashed_password"]):
+        logger.warning(f"Login failed: Incorrect password for email {form_data.username}")
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
+
+    logger.info("Creating access token...")
+    # Create access token
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": hospital["email"]},
+        expires_delta=access_token_expires
+    )
+    logger.info(f"Login successful for email: {form_data.username}")
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/api/hospital/profile", response_model=HospitalUserPublic, tags=["Hospital Profile"])
+async def get_hospital_profile(current_user: HospitalUserInDBBase = Depends(get_current_active_user)):
+    """Get the profile of the currently logged-in hospital."""
+    logger.info(f"Fetching profile for hospital: {current_user.hospitalName} ({current_user.email})")
+    return current_user
+
+@app.patch("/api/hospital/profile", response_model=HospitalUserPublic, tags=["Hospital Profile"])
+async def update_hospital_profile(
+    updates: Dict[str, Any],
+    current_user: HospitalUserInDBBase = Depends(get_current_active_user)
+):
+    """Update the profile of the currently logged-in hospital."""
+    logger.info(f"Profile update request for hospital: {current_user.hospitalName}")
+    
+    if hospitals_collection is None:
+        logger.error("Database connection not available during profile update")
+        raise HTTPException(status_code=503, detail="Database service unavailable")
+
+    # Don't allow updating certain fields
+    forbidden_updates = {"_id", "email", "hashed_password", "is_active", "registration_date"}
+    updates = {k: v for k, v in updates.items() if k not in forbidden_updates}
+
+    if not updates:
+        logger.warning("No valid update fields provided")
+        raise HTTPException(status_code=400, detail="No valid update fields provided")
+
+    try:
+        logger.info(f"Updating profile with fields: {list(updates.keys())}")
+        result = hospitals_collection.update_one(
+            {"_id": current_user.id},
+            {"$set": updates}
+        )
+        if result.modified_count == 0:
+            logger.warning("Profile update failed: Hospital not found")
+            raise HTTPException(status_code=404, detail="Hospital not found")
+        
+        logger.info("Successfully updated hospital profile")
+        updated_hospital = hospitals_collection.find_one({"_id": current_user.id})
+        return HospitalUserPublic(**updated_hospital)
+    except Exception as e:
+        logger.error(f"Error updating hospital profile: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Error updating profile")
+
+@app.patch("/api/hospital/location", tags=["Hospital Profile"])
+async def update_hospital_location(
+    lat: float = Query(..., ge=-90, le=90),
+    lon: float = Query(..., ge=-180, le=180),
+    current_user: HospitalUserInDBBase = Depends(get_current_active_user)
+):
+    """Update the hospital's location."""
+    if hospitals_collection is None:
+        raise HTTPException(status_code=503, detail="Database service unavailable")
+
+    try:
+        result = hospitals_collection.update_one(
+            {"_id": current_user.id},
+            {
+                "$set": {
+                    "location": {
+                        "type": "Point",
+                        "coordinates": [lon, lat]
+                    }
+                }
+            }
+        )
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Hospital not found")
+        return {"message": "Location updated successfully"}
+    except Exception as e:
+        logger.error(f"Error updating hospital location: {e}")
+        raise HTTPException(status_code=500, detail="Error updating location")
+
+@app.patch("/api/hospital/capabilities", tags=["Hospital Profile"])
+async def update_hospital_capabilities(
+    hasICU: Optional[bool] = None,
+    specialists: Optional[List[str]] = None,
+    equipment: Optional[List[str]] = None,
+    current_user: HospitalUserInDBBase = Depends(get_current_active_user)
+):
+    """Update the hospital's capabilities (ICU, specialists, equipment)."""
+    if hospitals_collection is None:
+        raise HTTPException(status_code=503, detail="Database service unavailable")
+
+    updates = {}
+    if hasICU is not None:
+        updates["hasICU"] = hasICU
+    if specialists is not None:
+        updates["specialists"] = [s.lower() for s in specialists]
+    if equipment is not None:
+        updates["equipment"] = [e.lower() for e in equipment]
+
+    if not updates:
+        raise HTTPException(status_code=400, detail="No update fields provided")
+
+    try:
+        result = hospitals_collection.update_one(
+            {"_id": current_user.id},
+            {"$set": updates}
+        )
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Hospital not found")
+        return {"message": "Capabilities updated successfully"}
+    except Exception as e:
+        logger.error(f"Error updating hospital capabilities: {e}")
+        raise HTTPException(status_code=500, detail="Error updating capabilities")
+
+# --- Add Uvicorn runner for local development ---
+if __name__ == "__main__":
+    logger.info("Starting Uvicorn server locally...")
+    # Make sure JWT_SECRET is loaded before this point
+    if not SECRET_KEY:
+         print("ERROR: JWT_SECRET not set in environment. Cannot start server.")
+    else:
+        # Use port 8000 to avoid conflict with potential frontend port
+        uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True) 
+
 # --- How to Run Locally ---
 # 1. Make sure MongoDB (Atlas or Local) is running.
 # 2. Ensure .env file has MONGO_URI and optionally DB_NAME.
 # 3. Activate virtual environment (recommended): source venv/bin/activate (or .\venv\Scripts\activate on Windows)
 # 4. Install dependencies: pip install fastapi uvicorn pymongo[srv] python-dotenv pydantic email-validator
-# 5. Run Uvicorn: uvicorn main:app --reload --host 0.0.0.0 --port 8080
-# 6. Access API docs at http://127.0.0.1:8080/docs
-# 7. Access application at http://127.0.0.1:8080/
+# 5. Run Uvicorn: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# 6. Access API docs at http://127.0.0.1:8000/api/docs
+# 7. Access application at http://127.0.0.1:8000/

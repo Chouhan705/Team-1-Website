@@ -3,7 +3,7 @@
 // --- Configuration ---
 // Set this to your backend URL.
 // For local testing (running main.py with uvicorn):
-const API_BASE_URL = 'http://127.0.0.1:8080';
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
 // For deployed backend (replace with your actual deployed URL):
 // const API_BASE_URL = 'https://your-deployed-chetak-backend.com';
 
@@ -244,7 +244,7 @@ async function initializeApp() {
                 addUserMarker(userLocation.lat, userLocation.lng);
 
                 // --- FETCH Hospitals from Backend API ---
-                const apiUrl = `${API_BASE_URL}/api/find-suitable`;
+                const apiUrl = `${API_BASE_URL}/find-suitable`;
                 const params = new URLSearchParams({
                     lat: userLocation.lat.toString(),
                     lon: userLocation.lng.toString(),

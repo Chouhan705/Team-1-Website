@@ -10,15 +10,21 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # --- Configuration ---
-load_dotenv() # Load variables from .env file
+load_dotenv()
 
-MONGO_URI = os.getenv("MONGO_URI")
-DB_NAME = os.getenv("DB_NAME", "chetakDB") # Use default if not set
-COLLECTION_NAME = "hospitals"
+# More flexible configuration
+MONGO_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")  # Default to local if not set
+DB_NAME = os.getenv("DB_NAME", "chetak")  # Default to lowercase, configurable
+COLLECTION_NAME = os.getenv("COLLECTION_NAME", "hospitals")
+
+logger.info(f"Using MongoDB URI: {MONGO_URI}")
+logger.info(f"Using database name: {DB_NAME}")
+logger.info(f"Using collection name: {COLLECTION_NAME}")
 
 if not MONGO_URI:
-    logger.critical("FATAL ERROR: MONGO_URI not found in environment variables. Check your .env file.")
-    exit("MONGO_URI not set.")
+    logger.warning("MONGODB_URI not found in environment variables. Using default local connection.")
+    logger.info("For Atlas, format should be: mongodb+srv://username:password@cluster-url/")
+    logger.info("For local, format should be: mongodb://localhost:27017")
 
 # --- Hospital Data (Sample - 30 Hospitals: Mumbai & Panvel) ---
 # Note: Capabilities are illustrative examples, not live data.
@@ -244,38 +250,80 @@ hospitals_data = [
 ]
 
 # --- Database Operations ---
-client: MongoClient | None = None # Type hint for client
+client: MongoClient | None = None
 try:
-    logger.info("Connecting to MongoDB Atlas...")
-    client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    logger.info(f"Connecting to MongoDB at {MONGO_URI.split('@')[-1]}...")  # Safe logging of URI
+    client = MongoClient(
+        MONGO_URI,
+        serverSelectionTimeoutMS=5000,
+        connectTimeoutMS=5000
+    )
     # Ping to confirm connection
     client.admin.command('ping')
     logger.info("MongoDB connection successful.")
 
-    db = client[DB_NAME]
-    collection = db[COLLECTION_NAME]
-    logger.info(f"Using database '{DB_NAME}', collection '{COLLECTION_NAME}'.")
+    # List all databases
+    logger.info("Available databases:")
+    for db_info in client.list_database_names():
+        logger.info(f"- {db_info}")
 
-    # Check if collection is empty before inserting
-    if collection.count_documents({}) == 0:
-        logger.info("Collection is empty. Inserting new hospital data...")
+    # Use database name from environment
+    db = client[DB_NAME]
+    logger.info(f"Using database: {db.name}")
+    
+    # Check if collection exists
+    collection_names = db.list_collection_names()
+    logger.info(f"Existing collections in {db.name}: {collection_names}")
+    
+    if COLLECTION_NAME in collection_names:
+        collection = db[COLLECTION_NAME]
+        logger.info(f"Using existing collection '{COLLECTION_NAME}'.")
+        
+        # Check if collection has data
+        doc_count = collection.count_documents({})
+        logger.info(f"Collection '{COLLECTION_NAME}' contains {doc_count} documents.")
+        if doc_count > 0:
+            logger.warning(f"Collection already contains {doc_count} documents.")
+            user_input = input("Do you want to clear the existing data and reload? (y/n): ")
+            if user_input.lower() == 'y':
+                collection.delete_many({})
+                logger.info("Collection cleared. Inserting new hospital data...")
+                result = collection.insert_many(hospitals_data)
+                logger.info(f"Successfully inserted {len(result.inserted_ids)} hospital documents.")
+            else:
+                logger.info("Keeping existing data. No changes made.")
+        else:
+            logger.info("Collection exists but is empty. Inserting hospital data...")
+            result = collection.insert_many(hospitals_data)
+            logger.info(f"Successfully inserted {len(result.inserted_ids)} hospital documents.")
+    else:
+        # Create the collection
+        collection = db[COLLECTION_NAME]
+        logger.info(f"Creating new collection '{COLLECTION_NAME}'.")
         result = collection.insert_many(hospitals_data)
         logger.info(f"Successfully inserted {len(result.inserted_ids)} hospital documents.")
-    else:
-         logger.warning("Collection already contains data. Skipping insertion.")
-         logger.info("Consider manually clearing the collection in Atlas or via script if you want to reload.")
+
+    # Verify the data was inserted
+    doc_count = collection.count_documents({})
+    logger.info(f"Final document count in {COLLECTION_NAME}: {doc_count}")
 
     # --- Ensure Geospatial Index ---
-    # This is idempotent - safe to run even if index exists
     try:
-        collection.create_index([("location", GEOSPHERE)])
-        logger.info("Successfully created or ensured 2dsphere index on 'location' field.")
+        index_name = "location_2dsphere"
+        existing_indexes = collection.list_indexes()
+        index_exists = any(index["name"] == index_name for index in existing_indexes)
+        
+        if not index_exists:
+            collection.create_index([("location", GEOSPHERE)], name=index_name)
+            logger.info("Successfully created 2dsphere index on 'location' field.")
+        else:
+            logger.info("2dsphere index already exists on 'location' field.")
     except OperationFailure as idx_err:
-        logger.error(f"Failed to create or ensure index: {idx_err}")
-        # Decide if this is critical - maybe log and continue?
+        logger.error(f"Failed to create or verify index: {idx_err}")
 
 except ConnectionFailure as e:
     logger.critical(f"Could not connect to MongoDB: {e}")
+    logger.info("Please check your connection string and ensure MongoDB is running.")
 except Exception as e:
     logger.error(f"An unexpected error occurred: {e}", exc_info=True)
 finally:

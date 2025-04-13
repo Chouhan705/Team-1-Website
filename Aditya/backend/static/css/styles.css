@@ -13,8 +13,10 @@ header {
     justify-content: space-between;
     align-items: center;
     background: linear-gradient(to right, #15518e, #3498db);
-    padding: 10px;
+    padding: 10px 20px; /* Standardized padding */
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    width: 100%; /* Explicitly set width */
+    box-sizing: border-box; /* Include padding in width */
 }
 
 #hamburger-menu {
