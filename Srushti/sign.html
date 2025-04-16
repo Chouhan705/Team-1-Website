@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Lookup</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function getStudentName() {
+var studentId = $('#studentId').val();
+// Check if the input is empty
+if(studentId === '') {
+$('#studentName').text('');
+return;
+}
+$.ajax({
+url: 'stud.php', // The PHP script to query the database
+type: 'POST',
+data: { id: studentId },
+success: function(response) {
+// Show the student name or an error message
+$('#studentName').text(response);
+},
+error: function() {
+$('#studentName').text('Error retrieving student data.');
+}
+});
+}
+// This function will be called when the submit button is clicked
+function submitForm() {
+getStudentName(); // Call the AJAX function to fetch the student name
+}
+</script>
+</head>
+<body>
+<h1>Student Lookup</h1>
+<label for="studentId">Enter Student ID:</label>
+<input type="text" id="studentId" name="studentId">
+<button type="button" onclick="submitForm()">Submit</button> <!-- Submit button
+
+-->
+<p>Student Name: <span id="studentName"></span></p>
+</body>
+</html>
