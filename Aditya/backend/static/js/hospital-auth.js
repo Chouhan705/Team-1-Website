@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // --- Form Handlers --- 
 async function handleLogin(e) {
+    
     e.preventDefault();
     clearErrorMessages(); 
     const submitButton = e.target.querySelector('button[type="submit"]');
@@ -144,7 +145,7 @@ async function handleLogin(e) {
         if (result.access_token) {
             localStorage.setItem('hospitalToken', result.access_token); // Store the token
             // Redirect to dashboard (assuming it exists or will be created)
-            window.location.href = 'hospital-dashboard.html'; 
+            window.location.href = '/static/hospital-dashboard.html'; 
         } else {
              throw new Error('Login successful, but no token received.');
         }
@@ -247,7 +248,7 @@ async function handleSignup(e) {
         const result = await response.json();
         console.log('Registration successful:', result);
         // Redirect to login page or show success message
-        window.location.href = '/login.html';
+        window.location.href = '/hospital-dashboard.html';
     } catch (error) {
         console.error('Registration error:', error);
         showError('signup', error.message || 'An error occurred during registration');

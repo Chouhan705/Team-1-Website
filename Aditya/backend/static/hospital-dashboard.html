@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Dashboard - Chetak</title>
+    <!-- Link to a new CSS file for dashboard styling -->
+    <link rel="stylesheet" href="\static\css\hospital-dashboard.css">
+    <!-- Optional: Include FontAwesome if you want icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <!-- Basic Header - You can reuse elements from other headers -->
+        <div><img src="/static/images/banner-removebg-preview.png" id="website-name" alt="Website Banner"></div>
+        <div class="header-controls">
+             <span id="hospital-name-display">Loading...</span>
+            <button id="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <h1>Hospital Dashboard</h1>
+        <p>Manage your hospital's information and capabilities.</p>
+
+        <!-- Message Area -->
+        <div id="message-area" class="message" style="display: none;"></div>
+
+        <!-- Profile Information Section -->
+        <section class="dashboard-section">
+            <h2><i class="fas fa-user-md"></i> Profile Information</h2>
+            <form id="profile-form">
+                 <div class="form-grid">
+                     <div class="form-group">
+                         <label for="profile-hospitalName">Hospital Name</label>
+                         <input type="text" id="profile-hospitalName" name="hospitalName" required readonly>
+                         <small>Read-only. Contact support to change.</small>
+                     </div>
+                     <div class="form-group">
+                         <label for="profile-email">Email Address</label>
+                         <input type="email" id="profile-email" name="email" required readonly>
+                          <small>Read-only. Used for login.</small>
+                     </div>
+                      <div class="form-group">
+                         <label for="profile-phone">Phone Number</label>
+                         <input type="tel" id="profile-phone" name="phone" required>
+                     </div>
+                     <div class="form-group full-width">
+                         <label for="profile-address">Full Address</label>
+                         <textarea id="profile-address" name="address" rows="3" required></textarea>
+                     </div>
+                      <div class="form-group">
+                         <label for="profile-licenseNumber">License Number</label>
+                         <input type="text" id="profile-licenseNumber" name="licenseNumber" required readonly>
+                          <small>Read-only. Contact support if incorrect.</small>
+                     </div>
+                </div>
+                 <button type="submit">Update Profile</button>
+            </form>
+        </section>
+
+        <!-- Location Update Section -->
+        <section class="dashboard-section">
+            <h2><i class="fas fa-map-marker-alt"></i> Location</h2>
+             <form id="location-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="location-lat">Latitude</label>
+                        <input type="number" step="any" id="location-lat" name="lat" required placeholder="e.g., 19.0760">
+                    </div>
+                    <div class="form-group">
+                        <label for="location-lon">Longitude</label>
+                        <input type="number" step="any" id="location-lon" name="lon" required placeholder="e.g., 72.8777">
+                    </div>
+                 </div>
+                 <div class="button-group">
+                    <button type="button" id="get-current-location-btn">Use My Current Location</button>
+                    <button type="submit">Update Location</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Capabilities Update Section -->
+        <section class="dashboard-section">
+            <h2><i class="fas fa-medkit"></i> Capabilities</h2>
+             <form id="capabilities-form">
+                 <div class="form-group checkbox-group">
+                    <input type="checkbox" id="capabilities-hasICU" name="hasICU">
+                    <label for="capabilities-hasICU">ICU Available?</label>
+                 </div>
+
+                 <div class="form-group tag-input-group">
+                    <label for="capabilities-specialists">Specialists Available (comma-separated)</label>
+                    <input type="text" id="capabilities-specialists" name="specialists" placeholder="e.g., cardiologist, neurologist, emergency">
+                    <small>Enter specialist types like 'cardiologist', 'orthopedic', 'pediatrician', 'general_surgeon', 'emergency', 'general', etc.</small>
+                 </div>
+
+                 <div class="form-group tag-input-group">
+                     <label for="capabilities-equipment">Major Equipment Available (comma-separated)</label>
+                    <input type="text" id="capabilities-equipment" name="equipment" placeholder="e.g., mri, ct_scanner, ventilator, x_ray">
+                    <small>Enter equipment like 'mri', 'ct_scanner', 'ventilator', 'defibrillator', 'ultrasound', 'x_ray', 'ecg', etc.</small>
+                 </div>
+
+                 <button type="submit">Update Capabilities</button>
+            </form>
+        </section>
+
+    </main>
+
+    <footer>
+        <div>© Chetak Emergency Services</div>
+    </footer>
+
+    <!-- Link to the new JS file for dashboard logic -->
+    <script src="js\hospital-dashboard.js"></script>
+</body>
+</html>
